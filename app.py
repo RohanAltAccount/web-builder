@@ -206,3 +206,21 @@ with gr.Blocks(css=css) as demo:
                                     autoSize=True,
                                     elem_style=dict(width="100%"),
                                 )
+input_box = antd.Input.TextArea(
+    size="large",
+    allow_clear=True,
+    autoSize=dict(minRows=2, maxRows=6),
+    placeholder=(
+        "Enter your website request here "
+        "(e.g., 'Create a responsive landing page for a tech startup'). "
+        "Be specific and detailed in your request to get the best results."
+    ),
+    elem_id="input-area",
+)
+generate_btn = antd.Button(
+    "Generate Site",
+    variant="filled",
+    color="default",
+)
+
+antd.Divider("Examples")
