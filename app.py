@@ -163,7 +163,7 @@ css = """
 """
 
 
-with gr.Blocks(css=css) as demo:
+with gr.Blocks() as demo:
     state = gr.State({"system_prompt": SYSTEM_PROMPT, "history": []})
 
     with ms.Application(elem_id="coder-artifacts"):
@@ -171,19 +171,19 @@ with gr.Blocks(css=css) as demo:
             with antd.Row(gutter=[32, 12], elem_style=dict(marginTop=20), align="stretch"):
                 with antd.Col(span=24, md=8):
                     with antd.Flex(vertical=True, gap="middle", wrap=True):
-                        input_box = antd.Input.TextArea(
+                        input_box = antd.Input.Textarea(
                             size="large",
                             allow_clear=True,
-                            autoSize=dict(minRows=2, maxRows=6),
+                            auto_size=dict(min_rows=2, max_rows=6),
                             placeholder=(
                                 "Enter your website request here "
                             ),
                             elem_id="input-area",
                         )
 
-                        system_prompt_input = antd.Input.TextArea(
+                        system_prompt_input = antd.Input.Textarea(
                             value=SYSTEM_PROMPT,
-                            autoSize=dict(minRows=4, maxRows=10),
+                            auto_size=dict(minRows=4, maxRows=10),
                             placeholder="System prompt",
                         )
 
@@ -219,8 +219,8 @@ with gr.Blocks(css=css) as demo:
                             sandbox = pro.WebSandbox()
 
                         with antd.Tabs.Item(label="Code", key="code"):
-                            output = antd.Input.TextArea(
-                                autoSize=dict(minRows=20, maxRows=30),
+                            output = antd.Input.Textarea(
+                                auto_size=dict(minRows=20, maxRows=30),
                                 readonly=True,
                             )
 
@@ -244,4 +244,4 @@ with gr.Blocks(css=css) as demo:
 
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(css=css)
