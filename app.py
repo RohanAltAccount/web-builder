@@ -1,18 +1,19 @@
 import re
-
+import requests
+import json
 import gradio as gr
 import modelscope_studio.components.antd as antd
 import modelscope_studio.components.base as ms
 import modelscope_studio.components.pro as pro
+from config import API_KEY, MODEL, SYSTEM_PROMPT, ENDPOINT, EXAMPLES
 from openai import OpenAI
-
-from config import API_KEY, MODEL, SYSTEM_PROMPT, ENDPOINT
 
 
 client = OpenAI(
     api_key=API_KEY,
-    base_url=ENDPOINT,
+    base_url="https://openrouter.ai/api/v1",
 )
+
 
 # ---------------------------------------------
 # retrieve react imports frm esm.sh
@@ -224,3 +225,17 @@ generate_btn = antd.Button(
 )
 
 antd.Divider("Examples")
+
+with antd.Flex(gap="small", wrap=True):
+    for example in EXAMPLES:
+        with antd.Card(
+                elem_style=dict(
+                    flex="1 1 fit-content"),
+                hoverable=True) as example_card:
+            antd.Card.Meta(
+                title=example['title'],
+                description=example['description'])
+                example_card.click(
+                    fn=GradioEvent.select_example(example),
+                    outputs=[input_box],
+                )
