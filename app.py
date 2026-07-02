@@ -50,4 +50,17 @@ class GradioEvent:
 if len(result) == 0:
                 result['index.html'] = text.strip()
             return result
-            
+            yield {
+                output_loading: gr.update(spinning =True),
+                state_tab: gr.update(active_key ="loading"),
+                output: gr.update(value=none),
+
+            }
+
+            if input_value is None:
+                input_value = ""
+                messages = [{role: "system", content: system_prompt_input_value}] + state_value["history"]
+                
+                messages.append({'role': "user", 'content': input_value})
+                generator = client.chat.completions.create(
+                    model=MODEL, messages=messages, temperature=0.2, max_tokens=2048, stream=True
