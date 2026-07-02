@@ -186,3 +186,23 @@ css = """
     min-height: 100%;
 }
 """
+with gr.Blocks(css=css) as demo:
+    state = gr.State({"system_prompt": "", "history": []})
+    with ms.Application(elem_id="coder-artifacts") as app:
+        with antd.ConfigProvider(theme=DEFAULT_THEME, locale=DEFAULT_LOCALE):
+
+            with ms.AutoLoading():
+                with antd.Row(gutter=[32, 12],
+                              elem_style=dict(marginTop=20),
+                              align="stretch"):
+                    with antd.Col(span=24, md=8):
+                        with antd.Flex(vertical=True, gap="middle", wrap=True):
+                            with antd.Flex(justify="center",
+                                           align="center",
+                                           vertical=True,
+                                           gap="middle"):
+                                input_text = antd.Input.TextArea(
+                                    placeholder="Enter your request here...",
+                                    autoSize=True,
+                                    elem_style=dict(width="100%"),
+                                )
