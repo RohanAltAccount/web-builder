@@ -68,16 +68,3 @@ EXAMPLES = [
 "Blog Website",
 "Make a page that showcases a blog website for sharing articles and thoughts. Include a homepage with a list of recent posts, an about section, and a contact form. Use a modern and clean design with a focus on the content. Use TailwindCSS for styling, React for the frontend, Next.js for the backend, and TypeScript for all code. Use functional components and hooks in React. Use framer-motion for animations and transitions. Ensure the site is responsive and works well on different screen sizes and devices.",
     }, ]
-    DEFAULT_LOCALE = "en"
-DEFAULT_THEME = {
-
-    "token": {
-        "colorPrimary": "#1E3A8A",
-        "colorBgBase": "#F9FAFB",
-        "colorTextBase": "#111827",
-        "colorBorderBase": "#D1D5DB",
-        "colorSuccess": "#10B981",
-        "colorWarning": "#F59E0B",
-        "colorError": "#EF4444",
-    }
-}
