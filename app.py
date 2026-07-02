@@ -1,74 +1,68 @@
 import re
-import requests
-import json
 import gradio as gr
 import modelscope_studio.components.antd as antd
 import modelscope_studio.components.base as ms
 import modelscope_studio.components.pro as pro
-from config import API_KEY, MODEL, SYSTEM_PROMPT, ENDPOINT, EXAMPLES
 from openai import OpenAI
+
+from config import API_KEY, MODEL, SYSTEM_PROMPT, ENDPOINT, EXAMPLES
 
 
 client = OpenAI(
     api_key=API_KEY,
-    base_url="https://openrouter.ai/api/v1",
+    base_url=ENDPOINT,
 )
-
-
 # ---------------------------------------------
-# retrieve react imports frm esm.sh
+# React imports frm esm.sh
 # ---------------------------------------------
 react_imports = {
     "lucide-react": "https://esm.sh/lucide-react@0.525.0",
     "recharts": "https://esm.sh/recharts@3.1.0",
     "framer-motion": "https://esm.sh/framer-motion@12.23.6",
-    "matter-js": "https://esm.sh/matter-js@0.20.0",
-    "p5": "https://esm.sh/p5@2.0.3",
-    "konva": "https://esm.sh/konva@9.3.22",
-    "react-konva": "https://esm.sh/react-konva@19.0.7",
-    "three": "https://esm.sh/three@0.178.0",
-    "@react-three/fiber": "https://esm.sh/@react-three/fiber@9.2.0",
-    "@react-three/drei": "https://esm.sh/@react-three/drei@10.5.2",
     "@tailwindcss/browser": "https://esm.sh/@tailwindcss/browser@4.1.11",
     "react": "https://esm.sh/react@^19.0.0",
     "react/": "https://esm.sh/react@^19.0.0/",
     "react-dom": "https://esm.sh/react-dom@^19.0.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.0.0/"
+    "react-dom/": "https://esm.sh/react-dom@^19.0.0/",
 }
 
 
-#---------------------------------------------
-# create gradio event class
-#---------------------------------------------
 class GradioEvent:
     @staticmethod
     def generate_code(input_value, system_prompt_input_value, state_value):
         def get_generated_files(text):
             patterns = {
-                "html": r"```html\n(.+?)\n```", "jsx": r"```jsx\n(.+?)\n```", "tsx": r"```tsx\n(.+?)\n```",
+                "html": r"```html\n(.+?)\n```",
+                "jsx": r"```jsx\n(.+?)\n```",
+                "tsx": r"```tsx\n(.+?)\n```",
             }
+
             result = {}
+
             for key, pattern in patterns.items():
                 matches = re.findall(pattern, text, re.DOTALL)
                 if matches:
-                    content = "\n".join(matches).strip()
-                    result[f"index.{key}"] = content
+                    result[f"index.{key}"] = "\n".join(matches).strip()
 
-            if len(result) == 0:
+            if not result:
                 result["index.html"] = text.strip()
+
             return result
+
         yield {
             output_loading: gr.update(spinning=True),
             state_tab: gr.update(active_key="loading"),
             output: gr.update(value=None),
         }
- if input_value is None:
+
+        if input_value is None:
             input_value = ""
 
         messages = [{"role": "system", "content": system_prompt_input_value}]
         messages += state_value["history"]
         messages.append({"role": "user", "content": input_value})
-                try:
+
+        try:
             generator = client.chat.completions.create(
                 model=MODEL,
                 messages=messages,
@@ -76,24 +70,32 @@ class GradioEvent:
                 max_tokens=2048,
                 stream=True,
             )
-                    response = ""
- for chunk in generator:
+
+            response = ""
+
+            for chunk in generator:
                 content = chunk.choices[0].delta.content
+
                 if content:
                     response += content
+
                 if chunk.choices[0].finish_reason == "stop":
                     break
+
             state_value["history"] = messages + [
                 {
                     "role": "assistant",
                     "content": response,
-                } ]
+                }
+            ]
+
             generated_files = get_generated_files(response)
+
             react_code = generated_files.get("index.jsx") or generated_files.get("index.tsx")
             html_code = generated_files.get("index.html")
 
-            sandbox_value = (
-                {
+            if react_code:
+                sandbox_value = {
                     "./index.tsx": """import Demo from './demo.tsx'
 import "@tailwindcss/browser"
 
@@ -101,11 +103,11 @@ export default Demo
 """,
                     "./demo.tsx": react_code,
                 }
-                if react_code
-                else {
+            else:
+                sandbox_value = {
                     "./index.html": html_code,
                 }
-            )
+
             yield {
                 output: gr.update(value=response),
                 download_content: gr.update(value=react_code or html_code),
@@ -118,42 +120,29 @@ export default Demo
                 ),
                 state: gr.update(value=state_value),
             }
+
         except Exception as e:
             yield {
                 output_loading: gr.update(spinning=False),
                 output: gr.update(value=f"Error: {e}"),
             }
-    @staticmethod
-    def select_example(example: dict):
-        return lambda: gr.update(value=example["description"])
-    @staticmethod
-    def close_modal():
-        return gr.update(open=False)
-    @staticmethod
-    def open_modal():
-        return gr.update(open=True)
-    @staticmethod
-    def disable_btns(btns: list):
-        return lambda: [gr.update(disabled=True) for _ in btns]
 
     @staticmethod
-    def enable_btns(btns: list):
-        return lambda: [gr.update(disabled=False) for _ in btns]
+    def select_example(example):
+        return lambda: gr.update(value=example["description"])
+
     @staticmethod
     def update_system_prompt(system_prompt_input_value, state_value):
         state_value["system_prompt"] = system_prompt_input_value
         return gr.update(value=state_value)
-    @staticmethod
-    def reset_system_prompt(state_value):
-        return gr.update(value=state_value["system_prompt"])
-    @staticmethod
-    def render_history(state_value):
-        return gr.update(value=state_value["history"])
+
     @staticmethod
     def clear_history(state_value):
         gr.Success("History Cleared.")
         state_value["history"] = []
         return gr.update(value=state_value)
+
+
 css = """
 #coder-artifacts .output-empty,
 #coder-artifacts .output-loading {
@@ -164,10 +153,6 @@ css = """
     min-height: 600px;
 }
 
-#coder-artifacts #output-container .ms-gr-ant-tabs-content,
-#coder-artifacts .ms-gr-ant-tabs-tabpane {
-    height: 100%;
-}
 #coder-artifacts .output-html {
     display: flex;
     flex-direction: column;
@@ -175,67 +160,88 @@ css = """
     min-height: 600px;
     max-height: 900px;
 }
-
-#coder-artifacts .output-html > iframe {
-    flex: 1;
-    width: 100%;
-}
-#coder-artifacts-code-drawer .output-code {
-    flex: 1;
-}
-#coder-artifacts-code-drawer .output-code .ms-gr-ant-spin-nested-loading {
-    min-height: 100%;
-}
 """
+
+
 with gr.Blocks(css=css) as demo:
-    state = gr.State({"system_prompt": "", "history": []})
-    with ms.Application(elem_id="coder-artifacts") as app:
-        with antd.ConfigProvider(theme=DEFAULT_THEME, locale=DEFAULT_LOCALE):
+    state = gr.State({"system_prompt": SYSTEM_PROMPT, "history": []})
 
-            with ms.AutoLoading():
-                with antd.Row(gutter=[32, 12],
-                              elem_style=dict(marginTop=20),
-                              align="stretch"):
-                    with antd.Col(span=24, md=8):
-                        with antd.Flex(vertical=True, gap="middle", wrap=True):
-                            with antd.Flex(justify="center",
-                                           align="center",
-                                           vertical=True,
-                                           gap="middle"):
-                                input_text = antd.Input.TextArea(
-                                    placeholder="Enter your request here...",
-                                    autoSize=True,
-                                    elem_style=dict(width="100%"),
+    with ms.Application(elem_id="coder-artifacts"):
+        with ms.AutoLoading():
+            with antd.Row(gutter=[32, 12], elem_style=dict(marginTop=20), align="stretch"):
+                with antd.Col(span=24, md=8):
+                    with antd.Flex(vertical=True, gap="middle", wrap=True):
+                        input_box = antd.Input.TextArea(
+                            size="large",
+                            allow_clear=True,
+                            autoSize=dict(minRows=2, maxRows=6),
+                            placeholder=(
+                                "Enter your website request here "
+                            ),
+                            elem_id="input-area",
+                        )
+
+                        system_prompt_input = antd.Input.TextArea(
+                            value=SYSTEM_PROMPT,
+                            autoSize=dict(minRows=4, maxRows=10),
+                            placeholder="System prompt",
+                        )
+
+                        generate_btn = antd.Button(
+                            "Generate Site",
+                            variant="filled",
+                            color="default",
+                        )
+
+                        antd.Divider("Examples")
+
+                        with antd.Flex(gap="small", wrap=True):
+                            for example in EXAMPLES:
+                                with antd.Card(
+                                    elem_style=dict(flex="1 1 fit-content"),
+                                    hoverable=True,
+                                ) as example_card:
+                                    antd.Card.Meta(
+                                        title=example["title"],
+                                        description=example["description"],
+                                    )
+
+                                example_card.click(
+                                    fn=GradioEvent.select_example(example),
+                                    outputs=[input_box],
                                 )
-input_box = antd.Input.TextArea(
-    size="large",
-    allow_clear=True,
-    autoSize=dict(minRows=2, maxRows=6),
-    placeholder=(
-        "Enter your website request here "
-        "(e.g., 'Create a responsive landing page for a tech startup'). "
-        "Be specific and detailed in your request to get the best results."
-    ),
-    elem_id="input-area",
-)
-generate_btn = antd.Button(
-    "Generate Site",
-    variant="filled",
-    color="default",
-)
 
-antd.Divider("Examples")
+                with antd.Col(span=24, md=16):
+                    output_loading = antd.Spin(spinning=False)
 
-with antd.Flex(gap="small", wrap=True):
-    for example in EXAMPLES:
-        with antd.Card(
-                elem_style=dict(
-                    flex="1 1 fit-content"),
-                hoverable=True) as example_card:
-            antd.Card.Meta(
-                title=example['title'],
-                description=example['description'])
-                example_card.click(
-                    fn=GradioEvent.select_example(example),
-                    outputs=[input_box],
-                )
+                    with antd.Tabs(active_key="render") as state_tab:
+                        with antd.Tabs.Item(label="Render", key="render"):
+                            sandbox = pro.WebSandbox()
+
+                        with antd.Tabs.Item(label="Code", key="code"):
+                            output = antd.Input.TextArea(
+                                autoSize=dict(minRows=20, maxRows=30),
+                                readonly=True,
+                            )
+
+                        with antd.Tabs.Item(label="Loading", key="loading"):
+                            ms.Markdown("Generating...")
+
+                    download_content = gr.State("")
+
+        generate_btn.click(
+            fn=GradioEvent.generate_code,
+            inputs=[input_box, system_prompt_input, state],
+            outputs=[
+                output_loading,
+                state_tab,
+                output,
+                download_content,
+                sandbox,
+                state,
+            ],
+        )
+
+
+if __name__ == "__main__":
+    demo.launch()
