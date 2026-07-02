@@ -60,7 +60,113 @@ if len(result) == 0:
             if input_value is None:
                 input_value = ""
                 messages = [{role: "system", content: system_prompt_input_value}] + state_value["history"]
-                
                 messages.append({'role': "user", 'content': input_value})
                 generator = client.chat.completions.create(
-                    model=MODEL, messages=messages, temperature=0.2, max_tokens=2048, stream=True
+                    model=MODEL, messages=messages, temperature=0.2, max_tokens=2048, stream=True)
+                     response = ""
+                   for chunk in generator:
+                    content = chunk.choices[0].delta.content
+                     response += content
+                     if chunk.choices[0].finish_reason == 'stop':
+                       state_value["history"] = messages + [{
+                    'role': "assistant",
+                    'content': response
+                }]
+
+               generated_files = get_generated_files(response)
+               react_code = generated_files.get("index.jsx") or generated_files.get("index.tsx")
+               html_code = generated_files.get("index.html")
+               yield {output:
+               gr.update(value=response),   download_content:
+                    gr.update(value=react_code or html_code),
+                    state_tab:
+                    gr.update(active_key="render"),
+                    output_loading:
+                    gr.update(spinning=False),
+                    sandbox:
+                    gr.update(
+                        template="react" if react_code else "html",
+                        imports=react_imports if react_code else {},
+                        value={                            "./index.tsx": """import Demo from './demo.tsx'
+import "@tailwindcss/browser"
+export default Demo
+"""
+       """,
+       "./demo.tsx": react_code  } 
+       if react_code else {"./index.html": html_code}
+       )
+       }
+       state: gr.update(value=state_value)}
+       else:
+        yield {
+            output_loading: gr.update(spinning=False),
+            output: gr.update(value="response"),
+            }
+            @staticmethod
+    def select_example(example: dict):
+        return lambda: gr.update(value=example["description"])
+
+                @staticmethod
+                def close_modal():
+                    return gr.update(open=False)
+
+                @staticmethod
+                def open_modal():
+                    return gr.update(open=True)
+
+                @staticmethod
+                def disable_btns(btns: list):
+                    return lambda: [gr.update(disabled=True) for _ in btns]
+
+                @staticmethod
+                def enable_btns(btns: list):
+                    return lambda: [gr.update(disabled=False) for _ in btns]
+
+                @staticmethod
+                def update_system_prompt(system_prompt_input_value, state_value):
+                    state_value["system_prompt"] = system_prompt_input_value
+                    return gr.update(value=state_value)
+                @staticmethod
+                    def reset_system_prompt(state_value):
+                        return gr.update(value=state_value["system_prompt"])
+
+                    @staticmethod
+                    def render_history(statue_value):
+                        return gr.update(value=statue_value["history"])
+
+                    @staticmethod
+                    def clear_history(state_value):
+                        gr.Success("History Cleared.")
+                        state_value["history"] = []
+                        return gr.update(value=state_value)
+
+                css = """
+                #coder-artifacts .output-empty,.output-loading {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                min-height: 600px;
+                }
+                #coder-artifacts #output-container .ms-gr-ant-tabs-content,.ms-gr-ant-tabs-tabpane {
+                height: 100%;
+               }
+               #coder-artifacts .output-html{
+               display: flex;
+               flex-direction: column;
+               width: 100%;
+               min-height: 600px;
+               max-height: 900px;
+               }
+                #coder-artifacts .output-html > iframe{
+                flex: 1;
+                width: 100%;
+                }
+                #coder-artifacts-code-drawer .output-code {
+                flex:1;
+                }
+                #coder-artifacts-code-drawer .output-code .ms-gr-ant-spin-nested-loading {
+                min-height: 100%;
+                }
+                """
+                
