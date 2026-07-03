@@ -221,7 +221,7 @@ with gr.Blocks() as demo:
                         with antd.Tabs.Item(label="Code", key="code"):
                             output = antd.Input.Textarea(
                                 auto_size=dict(minRows=20, maxRows=30),
-                                readonly=True,
+                                read_only=True,
                             )
 
                         with antd.Tabs.Item(label="Loading", key="loading"):
