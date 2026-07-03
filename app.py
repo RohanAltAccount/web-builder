@@ -152,13 +152,18 @@ css = """
     width: 100%;
     min-height: 600px;
 }
+
+#coder-artifacts {
+    background-color: #000000;
+    !important;
+}
 body {
     background-color: #000000;
-    text-color: ##ffd500;
+    color: #ffd500;
 }
-input-area textarea {
+#input-area textarea {
     background-color: #000000;
-    color: ##ffd500;
+    color: #ffd500;
     border-radius: 15px;
 }
 #coder-artifacts .output-html {
