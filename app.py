@@ -253,4 +253,9 @@ with gr.Blocks() as demo:
 
 if __name__ == "__main__":
     demo.launch(css=css)
+
+
+
+print("API key loaded:", API_KEY is not None)
+print("Model:", MODEL)
     # if you want to share the demo publicly, set share=True in the launch method after css=css
