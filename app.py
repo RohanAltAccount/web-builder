@@ -7,6 +7,10 @@ from openai import OpenAI
 # OpenaAI sdk ^__^
 from config import API_KEY, MODEL, SYSTEM_PROMPT, ENDPOINT, EXAMPLES
 
+print("Gradio app is running at: http://localhost:7860")
+print("Press Ctrl+C to stop the server.")
+print("API key loaded:", API_KEY is not None)
+print("Model:", MODEL)
 
 client = OpenAI(
     api_key=API_KEY,
@@ -144,33 +148,40 @@ export default Demo
 
 
 css = """
-#coder-artifacts .output-empty,
-#coder-artifacts .output-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 600px;
-}
-
+body,
+.gradio-container,
 #coder-artifacts {
-    background-color: #000000 !important;
-}
-body {
-    background-color: #000000;
+    background: #000 !important;
     color: #ffd500 !important;
 }
-#input-area textarea {
-    background-color: #000000;
-    color: #ffd500;
-    border-radius: 15px;
+.ant-input,
+.ant-input-textarea textarea {
+    background: #000 !important;
+    color: #ffd500 !important;
+    border-color: #444 !important;
 }
-#coder-artifacts .output-html {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 600px;
-    max-height: 1200px;
+.ant-input::placeholder,
+.ant-input-textarea textarea::placeholder {
+    color: #888 !important;
+}
+.ant-typography,
+.ant-card,
+.ant-card-meta-title,
+.ant-card-meta-description,
+.ant-divider,
+.ant-tabs-tab,
+span,
+p,
+label,
+div {
+    color: #ffd500 !important;
+}
+.ant-card {
+    background: #111 !important;
+}
+.ant-tabs-content,
+.ant-tabs-tabpane {
+    background: #000 !important;
 }
 
 
@@ -260,8 +271,3 @@ with gr.Blocks(css=css) as demo:
 if __name__ == "__main__":
     demo.launch()
    # if you want to share the demo publicly, set share=True in the launch method
-print("Gradio app is running at: http://localhost:7860")
-print("Press Ctrl+C to stop the server.")
-print("API key loaded:", API_KEY is not None)
-print("Model:", MODEL)
- 
