@@ -1,23 +1,26 @@
 # About
 This is a simple web builder (just for fun) I made that retrieves the model from OpenRouter (currently using Poolside Laguna M1: Free) using an API key. Anyone can use this (open source). You can contribute to this project or use the template to configure something of your own. You can change the model by switching out the API key and model name. Feel free to look through the code. I have included some comments in there as a guide.
 
+## What it taught me:
+This gave me some good Python practice. Overall, it was a challenging learning experience that was really fun. I learned that I have to be really specific, especially when dealing with indentation (my first few errors were due to indentation problems). 
+
 # How To Use
 1. **Clone the repo** at https://github.com/RohanAltAccount/web-builder in IDE/code editor of your choice (I've only used VS Code and Xcode, so I don't know much about the interfaces of other ones).
 
 2. **Create the virtual environment** by running the following in your project terminal:
 
 
-` 
+```
 python3 -m venv .venv 
 source .venv/bin/activate
-`
+```
 
 Here you go, Windows users (*AKA people who refuse to accept that MacOS is better*):
 
-` 
+```
 python -m venv 
 .venv .venv\Scripts\activate
-`
+```
 
 3. If you don't have them already, **install dependencies**.
 
@@ -32,10 +35,10 @@ python -m pip install gradio openai python-dotenv modelscope-studio dashscope
 
 4. Start **setting up environment variables**. Create a .env file at the root of the project. Paste the following lines into it.
 
-`
+```
 OPENROUTER_API_KEY=your_openrouter_api_key_here 
 OPENROUTER_MODEL=poolside/laguna-m.1:free
-`
+```
 
 Fill in the values with your model of choice and secret key.
 
