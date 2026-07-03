@@ -154,6 +154,17 @@ body,
     background: #000 !important;
     color: #ffd500 !important;
 }
+#generate-btn button {
+    background: #ffd500 !important;
+    color: #000 !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: bold !important;
+    padding: 10px 20px !important;
+}
+#generate-btn button:hover {
+    background: #ffea4d !important;
+}
 .ant-input,
 .ant-input-textarea textarea {
     background: #000 !important;
@@ -214,8 +225,9 @@ with gr.Blocks(css=css) as demo:
 
                         generate_btn = antd.Button(
                             "Generate Site",
-                            variant="filled",
-                            color="default",
+                            variant="outlined",
+                            color="primary",
+                            elem_id="generate-btn",
                         )
 
                         antd.Divider("Examples")
