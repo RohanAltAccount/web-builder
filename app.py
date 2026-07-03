@@ -4,7 +4,7 @@ import modelscope_studio.components.antd as antd
 import modelscope_studio.components.base as ms
 import modelscope_studio.components.pro as pro
 from openai import OpenAI
-
+# OpenaAI sdk ^__^
 from config import API_KEY, MODEL, SYSTEM_PROMPT, ENDPOINT, EXAMPLES
 
 
@@ -154,11 +154,11 @@ css = """
 }
 
 #coder-artifacts {
-    background-color: #000000; !important;
+    background-color: #000000 !important;
 }
 body {
     background-color: #000000;
-    color: #ffd500; !important;
+    color: #ffd500 !important;
 }
 #input-area textarea {
     background-color: #000000;
@@ -172,10 +172,12 @@ body {
     min-height: 600px;
     max-height: 1200px;
 }
+
+
 """
 
 
-with gr.Blocks() as demo:
+with gr.Blocks(css=css) as demo:
     state = gr.State({"system_prompt": SYSTEM_PROMPT, "history": []})
 
     with ms.Application(elem_id="coder-artifacts"):
@@ -256,10 +258,10 @@ with gr.Blocks() as demo:
 
 
 if __name__ == "__main__":
-    demo.launch(css=css)
-
-
-
+    demo.launch()
+   # if you want to share the demo publicly, set share=True in the launch method
+print("Gradio app is running at: http://localhost:7860")
+print("Press Ctrl+C to stop the server.")
 print("API key loaded:", API_KEY is not None)
 print("Model:", MODEL)
-    # if you want to share the demo publicly, set share=True in the launch method after css=css
+ 
