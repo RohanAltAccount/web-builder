@@ -1,6 +1,9 @@
 # About
 This is a simple web builder (just for fun) I made that retrieves the model from OpenRouter (currently using Poolside Laguna M1: Free) using an API key. Anyone can use this (open source). You can contribute to this project or use the template to configure something of your own. You can change the model by switching out the API key and model name. Feel free to look through the code. I have included some comments in there as a guide.
 
+## What it taught me:
+This gave me some good Python practice. Overall, it was a challenging learning experience that was really fun. I learned that I have to be really specific, especially when dealing with indentation (my first few errors were due to indentation problems). 
+
 # How To Use
 1. **Clone the repo** at https://github.com/RohanAltAccount/web-builder in IDE/code editor of your choice (I've only used VS Code and Xcode, so I don't know much about the interfaces of other ones).
 
