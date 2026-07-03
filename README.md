@@ -1,0 +1,2 @@
+# About
+This is a simple web builder (just for fun) I made that retrieves the model from OpenRouter (currently using Poolside Laguna M1: Free) using an API key. Anyone can use this (open source). You can help with this project or use the template to configure something of your own. You can change the model by switching out the API key and model name. Feel free to look through the code. I have included some comments in there as a guide.
