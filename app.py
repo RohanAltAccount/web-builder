@@ -201,7 +201,7 @@ with gr.Blocks(css=css) as demo:
                             allow_clear=True,
                             auto_size=dict(min_rows=2, max_rows=6),
                             placeholder=(
-                                "Enter your website request here "
+                                "Enter your website request here. These are the main instructions for the AI to generate the site. Any context or specifications can be added below, in the System Prompt. "
                             ),
                             elem_id="input-area",
                         )
