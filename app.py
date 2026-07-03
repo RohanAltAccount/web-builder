@@ -154,12 +154,11 @@ css = """
 }
 
 #coder-artifacts {
-    background-color: #000000;
-    !important;
+    background-color: #000000; !important;
 }
 body {
     background-color: #000000;
-    color: #ffd500;
+    color: #ffd500; !important;
 }
 #input-area textarea {
     background-color: #000000;
