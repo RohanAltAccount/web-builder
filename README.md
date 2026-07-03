@@ -12,7 +12,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 `
 
-Here you go, Windows users (*AKA people who refuse to accept everything about MacOS is better*):
+Here you go, Windows users (*AKA people who refuse to accept that MacOS is better*):
 
 ` 
 python -m venv 
@@ -37,8 +37,18 @@ OPENROUTER_API_KEY=your_openrouter_api_key_here
 OPENROUTER_MODEL=poolside/laguna-m.1:free
 `
 
+Fill in the values with your model of choice and secret key.
 
 5. Find a model and **get your key**. For more information, visit [this page]. (https://openrouter.ai/docs/quickstart#using-the-openai-sdk)
 
 If you're gonna publish you repo publicly, keep your .env private. **DO NOT COMMIT YOUR KEY***. Instead, add .env to a .gitignore file (if you don't already have one).
-6. 
+
+6. **Run it**. Whoo. You're done.
+Run this in the terminal:
+`
+python app.py
+`
+
+7. Open the localhost URL.
+
+*Quick Note: If you want to share the app (while it's running) with someone else, add `share=True` to the `demo.launch(css=css)` section. There is also a comment in the code to help you there. This way, someone else can open the app on their device. Only do it if you're sharing.*
