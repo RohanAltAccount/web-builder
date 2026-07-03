@@ -184,7 +184,7 @@ with gr.Blocks() as demo:
                         system_prompt_input = antd.Input.Textarea(
                             value=SYSTEM_PROMPT,
                             auto_size=dict(minRows=4, maxRows=10),
-                            placeholder="System prompt",
+                            placeholder="Write your system prompt here. This will be used to guide the AI in generating the website code.",
                         )
 
                         generate_btn = antd.Button(
@@ -244,4 +244,4 @@ with gr.Blocks() as demo:
 
 
 if __name__ == "__main__":
-    demo.launch(css=css)
+    demo.launch(css=css, share=True)
