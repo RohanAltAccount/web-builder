@@ -171,7 +171,7 @@ body {
     flex-direction: column;
     width: 100%;
     min-height: 600px;
-    max-height: 900px;
+    max-height: 1200px;
 }
 """
 
