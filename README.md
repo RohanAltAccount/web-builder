@@ -7,17 +7,17 @@ This is a simple web builder (just for fun) I made that retrieves the model from
 2. **Create the virtual environment** by running the following in your project terminal:
 
 
-` 
+```
 python3 -m venv .venv 
 source .venv/bin/activate
-`
+```
 
 Here you go, Windows users (*AKA people who refuse to accept that MacOS is better*):
 
-` 
+```
 python -m venv 
 .venv .venv\Scripts\activate
-`
+```
 
 3. If you don't have them already, **install dependencies**.
 
@@ -32,10 +32,10 @@ python -m pip install gradio openai python-dotenv modelscope-studio dashscope
 
 4. Start **setting up environment variables**. Create a .env file at the root of the project. Paste the following lines into it.
 
-`
+```
 OPENROUTER_API_KEY=your_openrouter_api_key_here 
 OPENROUTER_MODEL=poolside/laguna-m.1:free
-`
+```
 
 Fill in the values with your model of choice and secret key.
 
