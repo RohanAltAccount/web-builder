@@ -42,7 +42,7 @@ OPENROUTER_MODEL=poolside/laguna-m.1:free
 
 Fill in the values with your model of choice and secret key.
 
-5. Find a model and **get your key**. For more information, visit [this page]. (https://openrouter.ai/docs/quickstart#using-the-openai-sdk)
+5. Find a model and **get your key**. For more information, visit [this page](https://openrouter.ai/docs/quickstart#using-the-openai-sdk).
 
 If you're gonna publish you repo publicly, keep your .env private. **DO NOT COMMIT YOUR KEY***. Instead, add .env to a .gitignore file (if you don't already have one).
 
